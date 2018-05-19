@@ -8,6 +8,7 @@
 #include <fstream>
 #include <ctime>
 
+// just a test
 
 const char * cok;
 const int speed = 250;
