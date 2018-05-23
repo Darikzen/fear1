@@ -54,62 +54,48 @@ int main(){
                 }
             }
             std::ifstream I;
-            std::string str, word;
+            std::string str;
             I.open("FEAR1_text.txt", std::ios::in);
             while (!I.eof()){
                 upd();
                 std::getline(I, str);
-                word = "";
-                int asp = 0;
-                do{
-                    int i = word.length() - asp;
+
+                    std::string pre = "", pos = "", word = " ";
                     int sp;
-
-                    sp = rand()%10+5;
-                    asp += sp;
+                    sp = rand()%200+100;
                     for (int j = 0; j < sp; j++)
-                        word += ' ';
-                    sp = rand()%20+10;
-                    asp += sp;
-                    for (int j = 0; j < sp; j++)
-                        word += char(rand()%93+33);
-
-                    std::string nword = "";
-                    do{
-                        nword += std::toupper(str[i]);
-                        i++;
-                    }while(str[i] != ' ' && i < str.length());
+                        pre += ' ';
+                    sp = rand()%400+100;
+                    for (int j = 0; j < sp; j++){
+                        pre += char(rand()%93+33);
+                        pos += char(rand()%93+33);
+                    }
 
                     char cmd[100];
-                    const char * cnword = nword.c_str();
-                    sprintf(cmd, "%s\\espeak -ven+m1 -z -s%d -p0 \"%s\"", dir, speed+5, cnword);
+                    const char * cstr = str.c_str();
+                    sprintf(cmd, "%s\\espeak -ven+m1 -z -s%d -p0 \"%s\"", dir, speed, cstr);
                     cok = cmd;
                     std::thread t(speak);
 
-                    for (int i = 0; i < nword.length(); i++){
-                        std::cout<<word;
+                    for (int i = 0; i < str.length(); i++){
+                        std::cout<<pre;
                         clr(rand()%14 + 1);
-                        for (int j = 0; j <= i; j++)
-                            std::cout<<nword[j];
+                        word += toupper(str[i]);
+                        std::cout<<word;
+                        if (i%2 == 0)
+                                clr(15);
+                            else
+                                clr(0, 15);
+                        std::cout<<pos;
                         Sleep(3000/speed);
-                        if (i == nword.length()-1)
+                        if (i == str.length()-1){
                             t.join();
+                        }
                         if (i%2 == 0)
                             upd(0, 15);
                         else
                             upd();
                     }
-                    word += nword;
-
-                    sp = rand()%20+10;
-                    asp += sp;
-                    for (int i = 0; i < sp; i++)
-                        word += char(rand()%93+33);
-
-                    std::string ns = "\n\n\n";
-                    word += ns;
-                    asp += ns.length();
-                }while (word.length() < str.length() + asp - 2);
                 }
             I.close();
         }
